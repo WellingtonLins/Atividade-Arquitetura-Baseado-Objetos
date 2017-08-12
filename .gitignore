@@ -1,0 +1,6 @@
+ClienteApp/target/
+Node1/target/
+Node2/target/
+Node3/target/
+Shared/target/
+*.log
