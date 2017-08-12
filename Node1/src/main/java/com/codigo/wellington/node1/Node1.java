@@ -1,5 +1,6 @@
 package com.codigo.wellington.node1;
 
+import com.codigo.wellington.shared.Order;
 import com.codigo.wellington.shared.Person;
 import com.codigo.wellington.shared.Product;
 import com.codigo.wellington.shared.Salesman;
@@ -51,6 +52,15 @@ public class Node1 {
 
                         Person person = (Person) object;
                         DaoNode1.persistPerson(person);
+                        break;
+                    case "Order":
+                        Order    order = (Order) object;
+                        
+                        Person person1 = order.getSalesman().getPerson();
+                        Product product1 = order.getProduct();
+                       
+                        DaoNode1.persistPerson(person1);
+                        DaoNode1.persistProduct(product1);
                         break;
                     default:
                         System.out.println("Node1 Erro durante processamento");

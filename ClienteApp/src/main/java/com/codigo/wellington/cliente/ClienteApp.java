@@ -20,8 +20,9 @@ public class ClienteApp {
 
     public static void main(String[] args) throws IOException {
 //                savePersonSalesman();
-                savePersonSalesmanViaNode3();
-//                saveProduct();
+//                savePersonSalesmanViaNode3();
+                saveProductByNode1();
+//                saveProductViaNode2();
 //        saveOrder();
     }
 
@@ -65,11 +66,11 @@ public class ClienteApp {
         }
     }
 
-    private static void saveProduct() throws NumberFormatException, IOException {
+    private static void saveProductByNode1() throws NumberFormatException, IOException {
         boolean continuar = true;
         char opcao;
         Scanner scanner = new Scanner(System.in);
-        save2();
+        saveProduct();
         while (continuar) {
             System.out.println("Again y/n ?");
             opcao = scanner.next().charAt(0);
@@ -79,7 +80,26 @@ public class ClienteApp {
                 continuar = false;
 
             } else {
-                save2();
+                saveProduct();
+            }
+
+        }
+    }
+    private static void saveProductViaNode2() throws NumberFormatException, IOException {
+        boolean continuar = true;
+        char opcao;
+        Scanner scanner = new Scanner(System.in);
+        saveProduct();
+        while (continuar) {
+            System.out.println("Again y/n ?");
+            opcao = scanner.next().charAt(0);
+
+            if (opcao == 'n') {
+                System.out.println("Good bye!");
+                continuar = false;
+
+            } else {
+                saveProduct();
             }
 
         }
@@ -107,7 +127,7 @@ public class ClienteApp {
         }
     }
 
-    private static void save2() throws IOException, NumberFormatException {
+    private static void saveProduct() throws IOException, NumberFormatException {
         Socket node1 = new Socket("localhost", 1234);
         List<String> date = cadastroProduct();
         Product product = new Product(Integer.parseInt(date.get(0)), date.get(1));
@@ -164,9 +184,12 @@ public class ClienteApp {
         Salesman salesman = new Salesman(person, readPhone());
 
         List<String> dateProduct = cadastroProduct();
+        
         Product product = new Product(Integer.parseInt(dateProduct.get(0)),
                 dateProduct.get(1));
+        
         List<Integer> dateOrder = cadastroOrder();
+        
         Order order = new Order(dateOrder.get(0), salesman, product, dateOrder.get(1));
 
         try (ObjectOutputStream saida = new ObjectOutputStream(node3.getOutputStream())) {

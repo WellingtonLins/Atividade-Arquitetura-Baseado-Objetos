@@ -1,6 +1,7 @@
 package com.codigo.wellington.node3;
 
 import com.codigo.wellington.shared.Order;
+import com.codigo.wellington.shared.Product;
 import com.codigo.wellington.shared.Salesman;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,13 +36,11 @@ public class Node3 {
                         Order order = (Order) object;
                         DaoNode3.persistOrder(order);
 
-                        Salesman salesman = order.getSalesman();
-
                         Socket node2 = new Socket("localhost", 1235);
 
                         try (ObjectOutputStream saida
                                 = new ObjectOutputStream(node2.getOutputStream())) {
-                            saida.writeObject(salesman);
+                            saida.writeObject(order);
                         }
                         break;
                         
@@ -53,6 +52,16 @@ public class Node3 {
                         try (ObjectOutputStream saida
                                 = new ObjectOutputStream(forNode2.getOutputStream())) {
                             saida.writeObject(salesmanForNode2);
+                        }
+                        break;
+                    case "Product":
+                        Product productForNode2 = (Product) object;
+
+                        Socket toNode2 = new Socket("localhost", 1235);
+
+                        try (ObjectOutputStream saida
+                                = new ObjectOutputStream(toNode2.getOutputStream())) {
+                            saida.writeObject(productForNode2);
                         }
                         break;
                     default:
