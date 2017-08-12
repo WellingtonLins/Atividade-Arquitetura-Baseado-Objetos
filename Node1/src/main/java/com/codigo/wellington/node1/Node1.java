@@ -21,19 +21,25 @@ public class Node1 {
         try {
 
             while (true) {
-                Socket socket = server.accept();
+                try {
+                    Socket socket = server.accept();
+                    ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
 
-                ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
+                    Salesman salesman = (Salesman) entrada.readObject();
+                    DaoNode1.persistPerson(salesman.getPerson());
+                    Socket node2 = new Socket("localhost", 1235);
 
-                Salesman salesman = (Salesman) entrada.readObject();
-                DaoNode1.persistPerson(salesman.getPerson());
-                Socket node2 = new Socket("localhost", 1235);
+                    try (ObjectOutputStream saida
+                            = new ObjectOutputStream(node2.getOutputStream())) {
+                        saida.writeObject(salesman);
+                    }
+                } catch (ClassCastException e) {
+                    Socket socket = server.accept();
+                    ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
 
-                try (ObjectOutputStream saida
-                        = new ObjectOutputStream(node2.getOutputStream())) {
-                    saida.writeObject(salesman);
+                    Product product = (Product) entrada.readObject();
+                    DaoNode1.persistProduct(product);
                 }
-
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

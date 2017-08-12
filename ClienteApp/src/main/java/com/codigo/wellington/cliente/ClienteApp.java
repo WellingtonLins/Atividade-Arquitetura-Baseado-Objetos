@@ -1,6 +1,7 @@
 package com.codigo.wellington.cliente;
 
 import com.codigo.wellington.shared.Person;
+import com.codigo.wellington.shared.Product;
 import com.codigo.wellington.shared.Salesman;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -17,6 +18,11 @@ import java.util.Scanner;
 public class ClienteApp {
 
     public static void main(String[] args) throws IOException {
+//        savePersonSalesman();
+        saveProduct();
+    }
+
+    private static void savePersonSalesman() throws NumberFormatException, IOException {
         boolean continuar = true;
         char opcao;
         Scanner scanner = new Scanner(System.in);
@@ -36,6 +42,26 @@ public class ClienteApp {
         }
     }
 
+    private static void saveProduct() throws NumberFormatException, IOException {
+        boolean continuar = true;
+        char opcao;
+        Scanner scanner = new Scanner(System.in);
+        save2();
+        while (continuar) {
+            System.out.println("Again y/n ?");
+            opcao = scanner.next().charAt(0);
+
+            if (opcao == 'n') {
+                System.out.println("Good bye!");
+                continuar = false;
+
+            } else {
+                save2();
+            }
+
+        }
+    }
+
     private static void save() throws IOException, NumberFormatException {
         Socket node1 = new Socket("localhost", 1234);
         List<String> date = cadastro();
@@ -45,6 +71,17 @@ public class ClienteApp {
         try (ObjectOutputStream saida = new ObjectOutputStream(node1.getOutputStream())) {
             saida.writeObject(salesman);
         }
+    }
+
+    private static void save2() throws IOException, NumberFormatException {
+        Socket node1 = new Socket("localhost", 1234);
+        List<String> date = cadastroProduct();
+        Product product = new Product(Integer.parseInt(date.get(0)), date.get(1));
+
+        try (ObjectOutputStream saida = new ObjectOutputStream(node1.getOutputStream())) {
+            saida.writeObject(product);
+        }
+
     }
 
     private static List<String> cadastro() {
@@ -59,6 +96,22 @@ public class ClienteApp {
         System.out.println("Enter the name from Person");
         String personName = scanner.nextLine();
         data.add(personName);
+
+        return data;
+    }
+
+    private static List<String> cadastroProduct() {
+
+        List<String> data = new ArrayList<>();
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the id from Product");
+        String productId = scanner.nextLine();
+        data.add(productId);
+        System.out.println("Enter the name from Product");
+        String productName = scanner.nextLine();
+        data.add(productName);
 
         return data;
     }
@@ -98,11 +151,4 @@ public class ClienteApp {
 ////            saida.writeObject(salesman);
 ////        }
 //    }
-//    void saveProduct(Socket node1) throws IOException {
-//
-//        Product product = new Product(2, "Maça Vermelha");
-//
-//        try (ObjectOutputStream saida = new ObjectOutputStream(node1.getOutputStream())) {
-//            saida.writeObject(product);
-//        }
-//    }
+

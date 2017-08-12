@@ -29,8 +29,8 @@ public class DaoNode3 {
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, order.getId());
-            preparedStatement.setInt(2, order.getSalesmanid().getPersonid().getId());
-            preparedStatement.setInt(3, order.getProductid().getId());
+            preparedStatement.setInt(2, order.getSalesman().getPerson().getId());
+            preparedStatement.setInt(3, order.getProduct().getId());
             preparedStatement.setInt(4, order.getQuantity());
 
             System.out.println(sql);

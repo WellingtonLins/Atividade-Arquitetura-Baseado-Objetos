@@ -28,7 +28,7 @@ public class Node2 {
 
         } catch (IOException | ClassNotFoundException e) {
 
-            System.out.println("Node1 erro " + e.getMessage());
+            System.out.println("Node2 erro " + e.getMessage());
         }
     }
 }
