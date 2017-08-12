@@ -31,7 +31,7 @@ public class DaoNode2 {
             preparedStatement.setInt(1, salesman.getPerson().getId());
             preparedStatement.setString(2, salesman.getPhone());
 
-              System.out.println("insert into person (id,name) values ("+ salesman.getPerson().getId()
+              System.out.println("insert into salesman (id,name) values ("+ salesman.getPerson().getId()
                       +", " +salesman.getPhone()+")");
          
             preparedStatement.executeUpdate();

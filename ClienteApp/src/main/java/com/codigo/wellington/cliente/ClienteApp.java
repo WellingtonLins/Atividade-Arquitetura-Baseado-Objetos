@@ -1,5 +1,6 @@
 package com.codigo.wellington.cliente;
 
+import com.codigo.wellington.shared.Order;
 import com.codigo.wellington.shared.Person;
 import com.codigo.wellington.shared.Product;
 import com.codigo.wellington.shared.Salesman;
@@ -18,8 +19,10 @@ import java.util.Scanner;
 public class ClienteApp {
 
     public static void main(String[] args) throws IOException {
-//        savePersonSalesman();
-        saveProduct();
+        //        savePersonSalesman();
+        //        savePersonSalesmanViaNode3();
+        //        saveProduct();
+        saveOrder();;
     }
 
     private static void savePersonSalesman() throws NumberFormatException, IOException {
@@ -37,6 +40,26 @@ public class ClienteApp {
 
             } else {
                 save();
+            }
+
+        }
+    }
+
+    private static void savePersonSalesmanViaNode3() throws NumberFormatException, IOException {
+        boolean continuar = true;
+        char opcao;
+        Scanner scanner = new Scanner(System.in);
+        saveNode3();
+        while (continuar) {
+            System.out.println("Again y/n ?");
+            opcao = scanner.next().charAt(0);
+
+            if (opcao == 'n') {
+                System.out.println("Good bye!");
+                continuar = false;
+
+            } else {
+                saveNode3();
             }
 
         }
@@ -69,6 +92,17 @@ public class ClienteApp {
         Salesman salesman = new Salesman(person, readPhone());
 
         try (ObjectOutputStream saida = new ObjectOutputStream(node1.getOutputStream())) {
+            saida.writeObject(salesman);
+        }
+    }
+
+    private static void saveNode3() throws IOException, NumberFormatException {
+        Socket node3 = new Socket("localhost", 1236);
+        List<String> date = cadastro();
+        Person person = new Person(Integer.parseInt(date.get(0)), date.get(1));
+        Salesman salesman = new Salesman(person, readPhone());
+
+        try (ObjectOutputStream saida = new ObjectOutputStream(node3.getOutputStream())) {
             saida.writeObject(salesman);
         }
     }
@@ -123,32 +157,36 @@ public class ClienteApp {
         return phone;
     }
 
-    private static String youWantContinue() {
+    private static void saveOrder() throws IOException {
+        Socket node3 = new Socket("localhost", 1236);
+        List<String> date = cadastro();
+        Person person = new Person(Integer.parseInt(date.get(0)), date.get(1));
+        Salesman salesman = new Salesman(person, readPhone());
+
+        List<String> dateProduct = cadastroProduct();
+        Product product = new Product(Integer.parseInt(dateProduct.get(0)),
+                dateProduct.get(1));
+        List<Integer> dateOrder = cadastroOrder();
+        Order order = new Order(dateOrder.get(0), salesman, product, dateOrder.get(1));
+
+        try (ObjectOutputStream saida = new ObjectOutputStream(node3.getOutputStream())) {
+            saida.writeObject(order);
+        }
+    }
+
+    private static List<Integer> cadastroOrder() {
+        List<Integer> data = new ArrayList<>();
+
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Do you want continue: yes/no");
-        return scanner.nextLine();
+
+        System.out.println("Enter the id from Order");
+        int id = scanner.nextInt();
+        data.add(id);
+                
+        System.out.println("Enter the quantity");
+        int qnt = scanner.nextInt();
+        data.add(qnt);
+
+        return data;
     }
 }
-
-//void saveOrder() throws IOException {
-//
-//        Person person = new Person(1, "Kiko");
-//        Salesman salesman = new Salesman(person, "8888-8888");
-//        Product product = new Product(3, "Pera Verde");
-//
-//        Order order = new Order(1, salesman, product, 40);
-//
-//        try (ObjectOutputStream saida = new ObjectOutputStream(node3.getOutputStream())) {
-//            saida.writeObject(order);
-//        }
-//    }
-//    void savePersonSalesmanByNode3() throws IOException {
-//
-////        Person person = new Person(12, "Wellington");
-////        Salesman salesman = new Salesman(person, "7777-7777");
-////
-////        try (ObjectOutputStream saida = new ObjectOutputStream(node3.getOutputStream())) {
-////            saida.writeObject(salesman);
-////        }
-//    }
-

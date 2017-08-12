@@ -16,43 +16,38 @@ import java.net.Socket;
 public class Node3 {
 
     public static void main(String[] args) throws IOException, Exception {
-        ServerSocket server = new ServerSocket(12347);
+        ServerSocket server = new ServerSocket(1236);
 
         while (true) {
 
-            Socket socket = server.accept();
-            ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
-
             try {
-                node3SaveOrder(server);
+                Socket socket = server.accept();
+                ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
+
+                Order order = (Order) entrada.readObject();
+                DaoNode3.persistOrder(order);
+                Salesman salesman = order.getSalesman();
+                
+                Socket node2 = new Socket("localhost", 1235);
+
+                try (ObjectOutputStream saida
+                        = new ObjectOutputStream(node2.getOutputStream())) {
+                    saida.writeObject(salesman);
+                }
             } catch (ClassCastException e) {
-                node3SaveSalesman(server);
+                Socket socket = server.accept();
+                ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
+
+                Socket node2 = new Socket("localhost", 1235);
+
+                Salesman salesman = (Salesman) entrada.readObject();
+
+                try (ObjectOutputStream saida
+                        = new ObjectOutputStream(node2.getOutputStream())) {
+                    saida.writeObject(salesman);
+                }
             }
         }
 
-    }
-
-    private static void node3SaveOrder(ServerSocket server) throws IOException, ClassNotFoundException, Exception {
-
-        Socket socket = server.accept();
-        ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
-
-        Order order = (Order) entrada.readObject();
-        DaoNode3.persistOrder(order);
-        node3SaveSalesman(server);
-    }
-
-    private static void node3SaveSalesman(ServerSocket server) throws IOException, ClassNotFoundException, Exception {
-  Socket socket = server.accept();
-        ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
-
-        Socket node2 = new Socket("localhost", 12346);
-
-        Salesman salesman = (Salesman) entrada.readObject();
-
-        try (ObjectOutputStream saida
-                = new ObjectOutputStream(node2.getOutputStream())) {
-            saida.writeObject(salesman);
-        }
     }
 }
