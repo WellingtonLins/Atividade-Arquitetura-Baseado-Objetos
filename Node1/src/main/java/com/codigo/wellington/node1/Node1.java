@@ -22,23 +22,38 @@ public class Node1 {
 
             while (true) {
                 try {
+
                     Socket socket = server.accept();
                     ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
 
-                    Salesman salesman = (Salesman) entrada.readObject();
-                    DaoNode1.persistPerson(salesman.getPerson());
-                    Socket node2 = new Socket("localhost", 1235);
+                    Object object = entrada.readObject();
 
-                    try (ObjectOutputStream saida
-                            = new ObjectOutputStream(node2.getOutputStream())) {
-                        saida.writeObject(salesman);
+                    String operador = object.getClass().getSimpleName();
+
+                    System.out.println(operador);
+
+                    switch (operador) {
+                        case "Salesman":
+                            Salesman salesman = (Salesman) object;
+                            DaoNode1.persistPerson(salesman.getPerson());
+                            Socket node2 = new Socket("localhost", 1235);
+
+                            try (ObjectOutputStream saida
+                                    = new ObjectOutputStream(node2.getOutputStream())) {
+                                saida.writeObject(salesman);
+                            }
+                            break;
+                        case "Product":
+                         
+                            Product product = (Product) object;
+                            DaoNode1.persistProduct(product);
+                            break;
+                        default:
+                            System.out.println("Node1 Erro durante processamento");
+                            break;
                     }
                 } catch (ClassCastException e) {
-                    Socket socket = server.accept();
-                    ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
-
-                    Product product = (Product) entrada.readObject();
-                    DaoNode1.persistProduct(product);
+                    e.printStackTrace();
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -46,3 +61,7 @@ public class Node1 {
         }
     }
 }
+//                Socket socket = server.accept();
+//                ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
+//                Person person = (Person) entrada.readObject();
+//                DaoNode1.persistPerson(person);

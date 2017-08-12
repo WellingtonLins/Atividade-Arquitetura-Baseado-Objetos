@@ -1,8 +1,10 @@
 package com.codigo.wellington.node2;
 
+import com.codigo.wellington.shared.Person;
 import com.codigo.wellington.shared.Salesman;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -23,7 +25,14 @@ public class Node2 {
 
                 Salesman salesman = (Salesman) entrada.readObject();
                 DaoNode2.persistir(salesman);
+                Person person = salesman.getPerson();
 
+                Socket node1 = new Socket("localhost", 1234);
+
+                try (ObjectOutputStream saida
+                        = new ObjectOutputStream(node1.getOutputStream())) {
+                    saida.writeObject(person);
+                }
             }
 
         } catch (IOException | ClassNotFoundException e) {

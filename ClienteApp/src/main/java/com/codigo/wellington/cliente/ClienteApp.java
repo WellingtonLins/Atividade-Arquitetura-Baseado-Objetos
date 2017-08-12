@@ -19,10 +19,10 @@ import java.util.Scanner;
 public class ClienteApp {
 
     public static void main(String[] args) throws IOException {
-        //        savePersonSalesman();
-        //        savePersonSalesmanViaNode3();
-        //        saveProduct();
-        saveOrder();;
+//                savePersonSalesman();
+//                savePersonSalesmanViaNode3();
+                saveProduct();
+//        saveOrder();
     }
 
     private static void savePersonSalesman() throws NumberFormatException, IOException {
