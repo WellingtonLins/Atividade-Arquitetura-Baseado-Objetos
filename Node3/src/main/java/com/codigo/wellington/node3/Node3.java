@@ -24,15 +24,40 @@ public class Node3 {
                 Socket socket = server.accept();
                 ObjectInputStream entrada = new ObjectInputStream(socket.getInputStream());
 
-                Order order = (Order) entrada.readObject();
-                DaoNode3.persistOrder(order);
-                Salesman salesman = order.getSalesman();
-                
-                Socket node2 = new Socket("localhost", 1235);
+                Object object = entrada.readObject();
 
-                try (ObjectOutputStream saida
-                        = new ObjectOutputStream(node2.getOutputStream())) {
-                    saida.writeObject(salesman);
+                String operador = object.getClass().getSimpleName();
+
+                System.out.println(operador);
+
+                switch (operador) {
+                    case "Order":
+                        Order order = (Order) object;
+                        DaoNode3.persistOrder(order);
+
+                        Salesman salesman = order.getSalesman();
+
+                        Socket node2 = new Socket("localhost", 1235);
+
+                        try (ObjectOutputStream saida
+                                = new ObjectOutputStream(node2.getOutputStream())) {
+                            saida.writeObject(salesman);
+                        }
+                        break;
+                        
+                    case "Salesman":
+                        Salesman salesmanForNode2 = (Salesman) object;
+
+                        Socket forNode2 = new Socket("localhost", 1235);
+
+                        try (ObjectOutputStream saida
+                                = new ObjectOutputStream(forNode2.getOutputStream())) {
+                            saida.writeObject(salesmanForNode2);
+                        }
+                        break;
+                    default:
+                        System.out.println("Node3  Erro durante processamento");
+                        break;
                 }
             } catch (ClassCastException e) {
                 Socket socket = server.accept();

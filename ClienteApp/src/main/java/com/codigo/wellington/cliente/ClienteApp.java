@@ -20,8 +20,8 @@ public class ClienteApp {
 
     public static void main(String[] args) throws IOException {
 //                savePersonSalesman();
-//                savePersonSalesmanViaNode3();
-                saveProduct();
+                savePersonSalesmanViaNode3();
+//                saveProduct();
 //        saveOrder();
     }
 
