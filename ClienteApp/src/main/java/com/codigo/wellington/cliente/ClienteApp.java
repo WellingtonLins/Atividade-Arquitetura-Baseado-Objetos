@@ -22,7 +22,6 @@ public class ClienteApp {
 //                savePersonSalesman();
 //                savePersonSalesmanViaNode3();
                 saveProductByNode1();
-//                saveProductViaNode2();
 //        saveOrder();
     }
 
@@ -85,26 +84,7 @@ public class ClienteApp {
 
         }
     }
-    private static void saveProductViaNode2() throws NumberFormatException, IOException {
-        boolean continuar = true;
-        char opcao;
-        Scanner scanner = new Scanner(System.in);
-        saveProduct();
-        while (continuar) {
-            System.out.println("Again y/n ?");
-            opcao = scanner.next().charAt(0);
-
-            if (opcao == 'n') {
-                System.out.println("Good bye!");
-                continuar = false;
-
-            } else {
-                saveProduct();
-            }
-
-        }
-    }
-
+    
     private static void save() throws IOException, NumberFormatException {
         Socket node1 = new Socket("localhost", 1234);
         List<String> date = cadastro();
